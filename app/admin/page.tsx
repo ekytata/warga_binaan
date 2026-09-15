@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "./actions";
 import { WargaBinaanForm } from "./WargaBinaanForm";
+import { Button, Card } from "@/components/ui";
 
 export const metadata = {
   title: "Admin – Input Data WBP",
@@ -26,19 +27,16 @@ export default async function AdminPage() {
     .limit(20);
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 py-10">
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-8 sm:px-6 sm:py-10">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-semibold">Input Data Warga Binaan</h1>
-          <p className="text-sm text-black/60 dark:text-white/60">{user.email}</p>
+          <h1 className="text-xl font-semibold tracking-tight">Input Data Warga Binaan</h1>
+          <p className="text-sm text-muted">{user.email}</p>
         </div>
         <form action={signOut}>
-          <button
-            type="submit"
-            className="rounded-full border border-black/15 px-4 py-2 text-sm transition-colors hover:bg-black/[.04] dark:border-white/20 dark:hover:bg-white/[.06]"
-          >
+          <Button type="submit" variant="secondary">
             Keluar
-          </button>
+          </Button>
         </form>
       </header>
 
@@ -46,39 +44,60 @@ export default async function AdminPage() {
 
       <section className="flex flex-col gap-3">
         <h2 className="text-sm font-semibold">Data Terbaru</h2>
-        <div className="overflow-x-auto rounded-lg border border-black/10 dark:border-white/10">
-          <table className="w-full min-w-[640px] text-left text-sm">
-            <thead className="bg-black/[.03] dark:bg-white/[.06]">
-              <tr>
-                <th className="px-3 py-2 font-medium">Nama</th>
-                <th className="px-3 py-2 font-medium">Nomor Induk</th>
-                <th className="px-3 py-2 font-medium">Tanggal Lahir</th>
-                <th className="px-3 py-2 font-medium">Jenis Kejahatan</th>
-                <th className="px-3 py-2 font-medium">Ditambahkan</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(recent ?? []).map((row) => (
-                <tr key={row.id} className="border-t border-black/5 dark:border-white/10">
-                  <td className="px-3 py-2">{row.nama}</td>
-                  <td className="px-3 py-2 font-mono text-xs">{row.nomor_induk}</td>
-                  <td className="px-3 py-2">{row.tanggal_lahir}</td>
-                  <td className="px-3 py-2">{row.jenis_kejahatan ?? "–"}</td>
-                  <td className="px-3 py-2 text-black/60 dark:text-white/60">
-                    {new Date(row.created_at).toLocaleString("id-ID")}
-                  </td>
-                </tr>
-              ))}
-              {(!recent || recent.length === 0) && (
+
+        {(!recent || recent.length === 0) && (
+          <Card className="p-6 text-center text-sm text-muted">Belum ada data.</Card>
+        )}
+
+        {/* Mobile: stacked cards */}
+        {recent && recent.length > 0 && (
+          <div className="flex flex-col gap-2 sm:hidden">
+            {recent.map((row) => (
+              <Card key={row.id} className="p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <p className="text-sm font-medium">{row.nama}</p>
+                  <p className="shrink-0 text-xs text-muted">
+                    {new Date(row.created_at).toLocaleDateString("id-ID")}
+                  </p>
+                </div>
+                <p className="mt-1 font-mono text-xs text-muted">{row.nomor_induk}</p>
+                <p className="mt-1 text-xs text-muted">
+                  {row.tanggal_lahir} &middot; {row.jenis_kejahatan ?? "–"}
+                </p>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        {/* Desktop: table */}
+        {recent && recent.length > 0 && (
+          <Card className="hidden overflow-x-auto sm:block">
+            <table className="w-full min-w-[640px] text-left text-sm">
+              <thead className="bg-black/[.03] dark:bg-white/[.06]">
                 <tr>
-                  <td colSpan={5} className="px-3 py-6 text-center text-black/50 dark:text-white/50">
-                    Belum ada data.
-                  </td>
+                  <th className="px-4 py-2.5 font-medium">Nama</th>
+                  <th className="px-4 py-2.5 font-medium">Nomor Induk</th>
+                  <th className="px-4 py-2.5 font-medium">Tanggal Lahir</th>
+                  <th className="px-4 py-2.5 font-medium">Jenis Kejahatan</th>
+                  <th className="px-4 py-2.5 font-medium">Ditambahkan</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {recent.map((row) => (
+                  <tr key={row.id} className="border-t border-border">
+                    <td className="px-4 py-2.5">{row.nama}</td>
+                    <td className="px-4 py-2.5 font-mono text-xs">{row.nomor_induk}</td>
+                    <td className="px-4 py-2.5">{row.tanggal_lahir}</td>
+                    <td className="px-4 py-2.5">{row.jenis_kejahatan ?? "–"}</td>
+                    <td className="px-4 py-2.5 text-muted">
+                      {new Date(row.created_at).toLocaleString("id-ID")}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </Card>
+        )}
       </section>
     </div>
   );

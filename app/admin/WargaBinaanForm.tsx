@@ -2,7 +2,14 @@
 
 import { useActionState, useEffect, useRef } from "react";
 import { createWargaBinaan, type WargaBinaanFormState } from "./actions";
-import { FieldSet, RadioField, SelectField, TextField } from "@/components/fields";
+import {
+  FieldSet,
+  RadioField,
+  SelectField,
+  TextField,
+  labelClass,
+} from "@/components/fields";
+import { Button } from "@/components/ui";
 import {
   JENIS_KELAMIN_OPTIONS,
   KATEGORI_USIA_OPTIONS,
@@ -33,7 +40,7 @@ export function WargaBinaanForm() {
           label="Nomor Induk"
           name="nomor_induk"
           required
-          placeholder="mis. 380202310070001"
+          placeholder="mis. 380000000000000"
           error={err.nomor_induk}
         />
         <TextField
@@ -211,10 +218,7 @@ export function WargaBinaanForm() {
 
       <FieldSet title="Foto WBP">
         <div>
-          <label
-            htmlFor="foto"
-            className="mb-1 block text-xs font-medium text-black/70 dark:text-white/70"
-          >
+          <label htmlFor="foto" className={labelClass}>
             Unggah foto (JPG/PNG/WebP, maks 5MB)
           </label>
           <input
@@ -222,7 +226,7 @@ export function WargaBinaanForm() {
             name="foto"
             type="file"
             accept="image/jpeg,image/png,image/webp"
-            className="block w-full text-sm text-black/70 file:mr-3 file:rounded-full file:border-0 file:bg-foreground file:px-4 file:py-2 file:text-xs file:font-medium file:text-background dark:text-white/70"
+            className="block w-full text-sm text-muted file:mr-3 file:rounded-full file:border-0 file:bg-accent file:px-4 file:py-2 file:text-xs file:font-medium file:text-accent-foreground"
           />
           {err.foto && <p className="mt-1 text-xs text-red-500">{err.foto}</p>}
         </div>
@@ -240,13 +244,9 @@ export function WargaBinaanForm() {
       )}
 
       <div>
-        <button
-          type="submit"
-          disabled={pending}
-          className="rounded-full bg-foreground px-6 py-2.5 text-sm font-medium text-background transition-colors hover:bg-[#383838] disabled:opacity-50 dark:hover:bg-[#ccc]"
-        >
+        <Button type="submit" disabled={pending} className="w-full sm:w-auto">
           {pending ? "Menyimpan…" : "Simpan Data"}
-        </button>
+        </Button>
       </div>
     </form>
   );

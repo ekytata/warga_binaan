@@ -12,10 +12,10 @@ export default async function AdminLoginPage({
   const { next } = await searchParams;
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-6 px-6 py-16">
+    <div className="flex flex-1 flex-col items-center justify-center gap-6 px-4 py-16 sm:px-6">
       <div className="text-center">
-        <h1 className="text-2xl font-semibold">Login Admin</h1>
-        <p className="mt-1 text-sm text-black/60 dark:text-white/60">
+        <h1 className="text-2xl font-semibold tracking-tight">Login Admin</h1>
+        <p className="mt-1 text-sm text-muted">
           Data Warga Binaan Pemasyarakatan
         </p>
       </div>
