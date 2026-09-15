@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { searchWargaBinaan, type SearchState } from "./actions";
 import { formatDateID, formatRupiah, yaTidak } from "@/lib/format";
 
@@ -24,6 +24,11 @@ export function SearchForm() {
     searchWargaBinaan,
     initialState
   );
+  // Controlled inputs: React 19 clears uncontrolled form fields after every
+  // action submission (found, not found, or error alike). Holding the
+  // values in state ourselves keeps what the user typed on screen.
+  const [nomorInduk, setNomorInduk] = useState("");
+  const [tanggalLahir, setTanggalLahir] = useState("");
   const r = state.result;
 
   return (
@@ -41,6 +46,8 @@ export function SearchForm() {
             name="nomor_induk"
             required
             placeholder="mis. 380202310070001"
+            value={nomorInduk}
+            onChange={(e) => setNomorInduk(e.target.value)}
             className={inputClass}
           />
         </div>
@@ -53,6 +60,8 @@ export function SearchForm() {
             name="tanggal_lahir"
             type="date"
             required
+            value={tanggalLahir}
+            onChange={(e) => setTanggalLahir(e.target.value)}
             className={inputClass}
           />
         </div>
